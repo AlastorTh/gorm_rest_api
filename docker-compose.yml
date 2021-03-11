@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  gorm_rest_api:
+    container_name: gorm_rest_api
+    build: ./
+    ports: 
+      - 8080:8080 
+    environment: 
+      - DB_PASSWORD=postgres
+    depends_on:
+      - db
+    command: ./gorm_rest_api
+
+
+
+  db:
+    restart: always
+    image: postgres:latest
+    container_name: db_postgres
+    environment:  
+      - POSTGRES_PASSWORD=postgres 
+    ports:
+      - '5436:5432'
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgesql/data
