@@ -1,20 +1,23 @@
 package main
 
 import (
-	"net/http"
-
+	"github.com/AlastorTh/gorm_rest_api/configs"
 	"github.com/AlastorTh/gorm_rest_api/models"
-	"github.com/gin-gonic/gin"
+	"github.com/AlastorTh/gorm_rest_api/routes"
+	"github.com/jinzhu/gorm"
 )
 
+var err error
+
 func main() {
-	route := gin.Default()
+	configs.DB, err = gorm.Open("postgres",
+		"host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	defer configs.DB.Close()
+	configs.DB.AutoMigrate(&models.Ad{})
 
-	models.ConnectDB()
-
-	route.GET("/", func(context *gin.Context) {
-		context.JSON(http.StatusOK, gin.H{"message": "Hello World!"})
-	})
-
-	route.Run()
+	r := routes.SetUpRouter()
+	r.Run(":8080")
 }

@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:1.14-buster
 
 # Add Maintainer info
 LABEL maintainer="Aleksandr Kasatkin <alexkasatkin90@gmail.com>"
@@ -9,6 +9,10 @@ ENV GOPATH=/
 
 COPY ./ ./
 
+RUN apt-get update
+RUN apt-get -y install postgresql-client
+
+RUN chmod +x wait-for-postgres.sh
 
 # Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed 
 RUN go mod download 
