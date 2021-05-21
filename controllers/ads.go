@@ -36,6 +36,7 @@ func CreateAd(c *gin.Context) {
 	}
 	ad := models.Ad{Name: input.Name, Descript: input.Descript,
 		Price: input.Price, MainPic: input.MainPic, OtherPics: input.OtherPics}
+	ad.Validate()
 	configs.DB.Create(&ad)
 	c.JSON(http.StatusOK, gin.H{"ads": ad})
 }
